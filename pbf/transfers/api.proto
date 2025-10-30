@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package transfers;
+option go_package = "./;transfers";
+
+import "pbf/transfers/search.proto";
+
+service API {
+  rpc Search(SearchI) returns (SearchO) {}
+}
