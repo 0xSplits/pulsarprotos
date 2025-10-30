@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package transfers;
+option go_package = "./;transfers";
+
+// SearchI is the input for searching transfers.
+//
+//     {
+//         "filter": {
+//             "paging": {
+//                 "kind": "page",
+//                 "start": "0",
+//                 "stop": "49"
+//             }
+//         },
+//         "search": [
+//             {
+//                 "address": "0x4838...5f97"
+//             }
+//         ]
+//     }
+//
+message SearchI {
+  SearchI_Filter filter = 100;
+  repeated SearchI_Object search = 200;
+}
+
+message SearchI_Filter {
+  SearchI_Filter_Paging paging = 100;
+}
+
+message SearchI_Filter_Paging {
+  string kind = 100;
+  string start = 200;
+  string stop = 300;
+}
+
+message SearchI_Object {
+  // address is the wallet address for which transfers are searched.
+  string address = 100;
+}
+
+// SearchO is the output for searching transfers.
+//
+//     {
+//         "result": [
+//             {
+//                 "address": "0x4838...5f97",
+//                 "transfers": [
+//                     {
+//                         "amount": "420000000000000000000",
+//                         "created_at": "1689001255",
+//                         "id": "a9526eca-953e-49f7-aa4c-12fc06132124",
+//                         "to": "0x4838...5f97"
+//                     }
+//                 ]
+//             }
+//         ]
+//     }
+//
+message SearchO {
+  repeated SearchO_Object result = 100;
+}
+
+message SearchO_Object {
+  // address is the wallet address for which transfers are searched.
+  string address = 100;
+  // transfers is the list of transfers associated to the given wallet address.
+  repeated SearchO_Object_Transfer transfers = 200;
+}
+
+message SearchO_Object_Transfer {
+  // amount is the bigint value of the onchain transfer. It is the caller's
+  // responsibility to know the number of decimals for any given token transfer.
+  string amount = 100;
+  // created_at is the unix timestamp in seconds at which this transfer got
+  // created.
+  string created_at = 200;
+  // id is the UUID of the given transfer object.
+  string id = 300;
+  // to is the to field of this transfer, the wallet address to which tokens
+  // have been sent.
+  string to = 400;
+}
